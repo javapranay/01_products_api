@@ -16,7 +16,7 @@ spec:
   spec:
     containers:
     - name: productscontainer
-      image: ashokit/products
+      image: javapranay/products_api
       ports:
       - containerPort: 8080
 ---
