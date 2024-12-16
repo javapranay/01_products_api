@@ -2,13 +2,13 @@ pipeline {
     agent any
     
     tools{
-        maven "Maven-3.9.9"
+        maven "M3"
     }    
 
     stages {
         stage('Git Clone') {
             steps {
-               git branch: 'main', url: 'https://github.com/ashokitschool/01_products_api.git'
+               git branch: 'master', url: 'https://github.com/javapranay/01_products_api.git'
             }
         }
         stage('Maven Build'){
@@ -16,17 +16,17 @@ pipeline {
              sh 'mvn clean package'
             }
         }
-        stage('Docker Image'){
+        stage('Docker Image Build'){
             steps{
-             sh 'docker build -t ashokit/products_api .'
+             sh 'docker build -t javapranay/products_api .'
             }
         }
-        stage('Docker Image push'){
+        stage('Docker Image Push'){
             steps{
-            withCredentials([string(credentialsId: 'docker_pwd', variable: 'docker_pwd')]) {
-                   sh 'docker login -u ashokit -p ${docker_pwd}'
-                   sh 'docker push ashokit/products_api'
-            }
+                withCredentials([string(credentialsId: 'Docker-token', variable: 'secretPass')]) {
+                    sh 'docker login -u javapranay -p ${secretPass}'
+                    sh 'docker push javapranay/products_api'
+                }
             }
         }
         stage('k8s deployment'){
